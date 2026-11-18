@@ -1,0 +1,76 @@
+
+config interface 'loopback'
+	option device 'lo'
+	option proto 'static'
+	list ipaddr '127.0.0.1/8'
+
+config globals 'globals'
+
+config device
+	option name 'br-lan'
+	option type 'bridge'
+	list ports 'lan1'
+	list ports 'lan2'
+	list ports 'lan3'
+	list ports 'lan4'
+	list ports 'lan5'
+	list ports 'lan6'
+	list ports 'eth2'
+
+config device
+	option name 'lan1'
+	# option macaddr: keep the value generated on your own router
+
+config device
+	option name 'lan2'
+	# option macaddr: keep the value generated on your own router
+
+config device
+	option name 'lan3'
+	# option macaddr: keep the value generated on your own router
+
+config device
+	option name 'lan4'
+	# option macaddr: keep the value generated on your own router
+
+config device
+	option name 'lan5'
+	# option macaddr: keep the value generated on your own router
+
+config device
+	option name 'lan6'
+	# option macaddr: keep the value generated on your own router
+
+config interface 'lan'
+	option device 'br-lan'
+	option proto 'static'
+	list ipaddr '192.168.1.1/24'
+	option ip6assign '60'
+
+config device
+	option name 'eth0'
+	# option macaddr: keep the value generated on your own router
+
+config interface 'wan'
+	option device 'eth0'
+	option proto 'dhcp'
+	option metric '10'
+
+config interface 'wan6'
+	option device 'eth0'
+	option proto 'dhcpv6'
+
+config device
+	option name 'eth2'
+	# option macaddr: keep the value generated on your own router
+
+config interface 'usbwan'
+	option proto 'dhcp'
+	option device 'usb0'
+	option metric '20'
+
+config interface 'usbwan_eth'
+	option proto 'dhcp'
+	option device 'eth3'
+	option metric '21'
+

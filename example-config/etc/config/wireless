@@ -1,0 +1,20 @@
+
+config wifi-device 'radio0'
+	option type 'mac80211'
+	option path 'soc/fd800000.pcie/pci0001:00/0001:00:00.0/0001:01:00.0'
+	option band '2g'
+	option channel 'auto'
+	option country 'UA'
+	option cell_density '1'
+	option htmode 'HT20'
+	option channels '1 6 11'
+
+config wifi-iface 'default_radio0'
+	# CHANGE the network name (ssid) and the password (key) below
+	option device 'radio0'
+	option network 'lan'
+	option mode 'ap'
+	option ssid 'SSID'
+	option encryption 'psk2+ccmp'
+	option key '1234567890'
+

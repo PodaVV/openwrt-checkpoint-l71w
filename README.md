@@ -15,7 +15,8 @@ This repository adds:
 - an installation guide based on a real flash over the **mini-USB console**;
 - extra kernel modules for this exact image (USB printer, USB modems and phone tethering, USB LED trigger);
 - small [recipes](recipes/README.md): front-panel LEDs, microSD network folder, USB print server, backup internet over a
-  phone with automatic failover, remote access with Tailscale.
+  phone with automatic failover, remote access with Tailscale;
+- the [configuration of our working router](example-config/README.md), with personal data removed.
 
 > **No warranty.** This is a snapshot from an unmerged pull request. Flashing replaces the Check Point firmware.
 > Back up first (see below). We have **not** tested going back to the stock firmware.

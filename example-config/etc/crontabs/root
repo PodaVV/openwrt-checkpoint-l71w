@@ -1,0 +1,1 @@
+30 4 * * 0 grep -q " /mnt/sd " /proc/mounts && sysupgrade -b /mnt/sd/backup/cfg-$(date +\%F).tar.gz && find /mnt/sd/backup -name "cfg-*.tar.gz" -mtime +60 -delete # sd-cfg-backup

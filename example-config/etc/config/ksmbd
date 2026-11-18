@@ -1,0 +1,16 @@
+
+config globals
+	option workgroup 'WORKGROUP'
+	option description 'Ksmbd on OpenWrt'
+
+config share
+	option name 'sd'
+	option path '/mnt/sd/share'
+	option read_only 'no'
+	option guest_ok 'no'
+	option users 'home'
+	option force_root '1'
+	option create_mask '0664'
+	option dir_mask '0775'
+	option browseable 'yes'
+
