@@ -1,0 +1,57 @@
+#!/bin/sh
+# WAN failover watchdog (2026-11-18, L-71W home setup).
+# Normal: default route via WAN (eth0) metric 10, backup (phone/modem) metric 20.
+# If internet via eth0 is dead for FAILS checks in a row, WAN default route is moved to metric 200,
+# so traffic goes via the backup. Probing continues through eth0; when it answers again, metric 10 is restored.
+IF=eth0
+HOSTS="1.1.1.1 8.8.8.8 9.9.9.9"
+FAILS=3
+INTERVAL=20
+GOOD=10
+BAD=200
+
+probe() {
+	for h in $HOSTS; do
+		ping -I "$IF" -c 1 -W 3 "$h" >/dev/null 2>&1 && return 0
+	done
+	return 1
+}
+
+# keep exactly one default route on $IF, with metric $1
+setmetric() {
+	cur=$(ip -4 route show default dev "$IF")
+	[ -n "$cur" ] || return 0
+	[ "$(echo "$cur" | wc -l)" -eq 1 ] && echo "$cur" | grep -q "metric $1\( \|$\)" && return 0
+	gw=$(echo "$cur" | awk '/via/ {print $3; exit}')
+	[ -n "$gw" ] || return 0
+	while ip -4 route del default dev "$IF" 2>/dev/null; do :; done
+	ip -4 route add default via "$gw" dev "$IF" metric "$1"
+}
+
+if [ "$1" = "restore" ]; then
+	setmetric "$GOOD"
+	exit 0
+fi
+
+state=ok
+n=0
+while true; do
+	if ip -4 route show default dev "$IF" | grep -q via; then
+		if probe; then
+			if [ "$state" = bad ]; then
+				logger -t wan-failover "internet via WAN is back - WAN is the main route again"
+				state=ok
+			fi
+			n=0
+			setmetric "$GOOD"
+		else
+			n=$((n + 1))
+			if [ "$n" -ge "$FAILS" ]; then
+				[ "$state" = ok ] && logger -t wan-failover "no internet via WAN ($n checks) - switching to backup route"
+				state=bad
+				setmetric "$BAD"
+			fi
+		fi
+	fi
+	sleep "$INTERVAL"
+done

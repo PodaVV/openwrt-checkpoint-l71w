@@ -1,0 +1,10 @@
+#!/bin/sh
+# /etc/hotplug.d/block/90-sd-led
+# Light the front-panel SD LED while the microSD card partition is present.
+# On the L-71W the card slot is an internal USB card reader, so the card shows up as sda/sda1.
+[ "$DEVNAME" = sda1 ] || exit 0
+L=/sys/class/leds/green:sd/brightness
+case "$ACTION" in
+	add) echo 1 > $L ;;
+	remove) echo 0 > $L ;;
+esac

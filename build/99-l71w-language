@@ -1,0 +1,4 @@
+#!/bin/sh
+case "$(uci -q get luci.main.lang)" in
+    auto|'') uci set luci.main.lang=ru && uci commit luci ;;
+esac
